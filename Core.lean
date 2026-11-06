@@ -16,3 +16,4 @@ import Core.M5b
 import Core.M5c
 import Core.M5d
 import Core.M6
+import Core.M6e
