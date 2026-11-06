@@ -21,3 +21,4 @@ import Core.M7
 import Core.M7b
 import Core.M7c
 import Core.M7d
+import Core.M7e
