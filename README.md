@@ -39,7 +39,8 @@ lake build
 | M7（四·上）合并演算加入区域 | `Core/M7d.lean`（定义）、`Core/M7e.lean`（证明） | 已通过机器检查（Lean v4.35.0） |
 | M7（四·下）合并演算里的 D4 | `Core/M7f.lean` | 已通过机器检查（Lean v4.35.0） |
 | M7（五·上）CFG 数据流检查（所有权 + 线性值） | `Core/M7g.lean` | 已通过机器检查（Lean v4.35.0） |
-| M7（五·下）之后：CFG 加入区域与 errdefer；测试套件 | — | 未开始 |
+| M7（五·下）CFG 加入区域与 errdefer | `Core/M7h.lean` | 已写完，待机器检查 |
+| M7（六）之后：测试套件 / 差分测试 | — | 未开始 |
 
 M1 第一次编译时有 4 处 `omega` 失败（`omega` 不认 `abbrev Loc := Nat` 这个别名），改用 `Nat.lt_irrefl` 等引理后全部通过。后续里程碑避免在别名类型上用 `omega`。
 
