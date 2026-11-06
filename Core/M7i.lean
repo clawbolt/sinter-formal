@@ -183,4 +183,48 @@ def runAll : IO Unit := do
 
 #eval runAll
 
+/-! ## 只有 CFG 接受的程序：按两个片段的种类分组 -/
+
+def atomNames : List String :=
+  ["skip", "fail", "alloc 0", "use 0", "free 0", "lnew 1", "consume 1", "decl 3", "ralloc 3", "read 3"]
+
+/-- （种类，名字，程序片段），顺序和 `items` 相同。 -/
+def named : List (String × String × Q) :=
+  let as := atomNames.zip atoms
+  as.map (fun (n, a) => ("原子", n, a)) ++
+  as.map (fun (n, a) => ("分支(左)", s!"if {n}", Q.branch a .skip)) ++
+  as.map (fun (n, a) => ("分支(右)", s!"else {n}", Q.branch .skip a)) ++
+  as.map (fun (n, a) => ("循环", s!"loop {n}", Q.loop a)) ++
+  as.map (fun (n, a) => ("errdefer", s!"errdefer1 {n}", Q.guard 1 a)) ++
+  as.map (fun (n, a) => ("子块", s!"block {n}", Q.block a))
+
+def presNamed : List (String × Q) :=
+  [("—", .skip), ("alloc 0", .cmd alloc0), ("lnew 1", .cmd lnew1), ("decl 3", .cmd decl3)]
+
+def addTo : List (String × Nat × List String) → String → String → List (String × Nat × List String)
+  | [],                k, e => [(k, 1, [e])]
+  | (k', n, es) :: rest, k, e =>
+    if k' == k then (k', n + 1, if es.length < 3 then es ++ [e] else es) :: rest
+    else (k', n, es) :: addTo rest k e
+
+def analyze : IO Unit := do
+  let mut groups : List (String × Nat × List String) := []
+  let mut byPre : List (String × Nat × List String) := []
+  for (pn, pre) in presNamed do
+    for (k1, n1, i1) in named do
+      for (k2, n2, i2) in named do
+        let p : Q := .block (blockL [pre, i1, i2])
+        if !Core.M7d.accepts 5 p && acceptsF 5 (lower p) then
+          let ex := s!"[{pn}; {n1}; {n2}]"
+          groups := addTo groups s!"{k1} + {k2}" ex
+          byPre := addTo byPre pn ex
+  IO.println "只有 CFG 接受，按前缀："
+  for (key, n, _) in byPre do
+    IO.println s!"  {key}：{n} 个"
+  IO.println "只有 CFG 接受，按片段种类（前一个 + 后一个）："
+  for (key, n, exs) in groups do
+    IO.println s!"  {key}：{n} 个，例如 {exs}"
+
+#eval analyze
+
 end Core.M7i
