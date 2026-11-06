@@ -18,7 +18,8 @@ lake build
 | M1 所有权与移动（直线代码） | `Core/M1.lean` | 已通过机器检查（Lean v4.35.0） |
 | M2a 作用域结束时自动释放、没有泄漏 | `Core/M2.lean` | 已通过机器检查（Lean v4.35.0） |
 | M2b（上）一层分支与 drop flag | `Core/M2b.lean` | 已通过机器检查（Lean v4.35.0） |
-| M2b（下）循环与嵌套分支、M3–M7 | — | 未开始 |
+| M2b（下·一）任意嵌套的分支 | `Core/M2n.lean` | 已写完，待机器检查 |
+| M2b（下·二）循环、M3–M7 | — | 未开始 |
 
 M1 第一次编译时有 4 处 `omega` 失败（`omega` 不认 `abbrev Loc := Nat` 这个别名），改用 `Nat.lt_irrefl` 等引理后全部通过。后续里程碑避免在别名类型上用 `omega`。
 
