@@ -20,7 +20,7 @@ lake build
 | M2b（上）一层分支与 drop flag | `Core/M2b.lean` | 已通过机器检查（Lean v4.35.0） |
 | M2b（下·一）任意嵌套的分支 | `Core/M2n.lean` | 已通过机器检查（Lean v4.35.0） |
 | M2b（下·二）循环 | `Core/M2L.lean` | 已通过机器检查（Lean v4.35.0） |
-| M3（一）两参数调用与排他性 | `Core/M3.lean` | 已写完，待机器检查 |
+| M3（一）两参数调用与排他性 | `Core/M3.lean` | 已通过机器检查（Lean v4.35.0） |
 | M3（二）、M4–M7 | — | 未开始 |
 
 M1 第一次编译时有 4 处 `omega` 失败（`omega` 不认 `abbrev Loc := Nat` 这个别名），改用 `Nat.lt_irrefl` 等引理后全部通过。后续里程碑避免在别名类型上用 `omega`。
