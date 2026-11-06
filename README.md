@@ -28,8 +28,9 @@ lake build
 | M4（三·下）投影作为调用参数 | `Core/M4D.lean` | 已通过机器检查（Lean v4.35.0） |
 | M4（四）分支、循环上的活跃性分析 | `Core/M4E.lean` | 已通过机器检查（Lean v4.35.0） |
 | M5（一）区域的基本模型 | `Core/M5.lean` | 已通过机器检查（Lean v4.35.0） |
-| M5（二）协变与 `Mut` | `Core/M5b.lean` | 已写完，待机器检查 |
-| M5（三）D3 与 D4 | — | 未开始 |
+| M5（二）协变与 `Mut` | `Core/M5b.lean` | 已通过机器检查（Lean v4.35.0） |
+| M5（三）D4：区域里不放带 `Drop` 的值 | `Core/M5c.lean` | 已写完，待机器检查 |
+| M5（四）D3：函数区域参数之间没有顺序 | — | 未开始 |
 | M6–M7 | — | 未开始 |
 
 M1 第一次编译时有 4 处 `omega` 失败（`omega` 不认 `abbrev Loc := Nat` 这个别名），改用 `Nat.lt_irrefl` 等引理后全部通过。后续里程碑避免在别名类型上用 `omega`。
