@@ -33,8 +33,9 @@ lake build
 | M5（四）D3：函数区域参数之间没有顺序 | `Core/M5d.lean` | 已通过机器检查（Lean v4.35.0） |
 | M6（一）`linear` 值 | `Core/M6.lean` | 已通过机器检查（Lean v4.35.0） |
 | M6（二）`errdefer` 与出错退出 | `Core/M6e.lean` | 已通过机器检查（Lean v4.35.0） |
-| M7（一）合并成一个演算：所有权、投影、`linear` | `Core/M7.lean` | 已写完，待机器检查 |
-| M7（二）之后：并入区域、调用、`errdefer`；CFG 算法；测试套件 | — | 未开始 |
+| M7（一）合并成一个演算：所有权、投影、`linear` | `Core/M7.lean` | 已通过机器检查（Lean v4.35.0） |
+| M7（二）合并演算加入调用 | `Core/M7b.lean` | 已写完，待机器检查 |
+| M7（三）之后：并入 `errdefer`、区域；CFG 算法；测试套件 | — | 未开始 |
 
 M1 第一次编译时有 4 处 `omega` 失败（`omega` 不认 `abbrev Loc := Nat` 这个别名），改用 `Nat.lt_irrefl` 等引理后全部通过。后续里程碑避免在别名类型上用 `omega`。
 
