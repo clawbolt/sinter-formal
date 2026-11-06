@@ -1,0 +1,5 @@
+name = "core_calculus"
+defaultTargets = ["Core"]
+
+[[lean_lib]]
+name = "Core"
