@@ -216,13 +216,13 @@ theorem exec_erase (n : Nat) : ∀ (p : Q5) (st : St) (cs : List Bool),
       have hb : noStore b = true := hs
       simp only [exec5, erase, Core.M7d.exec]
       by_cases hc : cs.headD false = true
-      · rw [if_pos hc, if_pos hc, ih b _ _ hb]
+      · rw [ite_eq_left hc, ite_eq_left hc, ih b _ _ hb]
         cases h : Core.M7d.exec n (erase b) st cs.tail with
         | ok s₁ cs₁ => exact ih (.loop b) s₁ cs₁ hs
         | exn => rfl
         | err => rfl
         | oof => rfl
-      · rw [if_neg hc, if_neg hc]
+      · rw [ite_eq_right hc, ite_eq_right hc]
     | fail => rfl
     | guard x p =>
       have hp : noStore p = true := hs
