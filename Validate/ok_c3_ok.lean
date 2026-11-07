@@ -55,10 +55,11 @@ def f4 : CFG := [
 
 /-- report -/
 def f5 : CFG := [
-  ⟨.nop, [1, 2], false⟩,
+  ⟨.nop, [1, 4], false⟩,
   ⟨.nop, [3], false⟩,
   ⟨.nop, [3], false⟩,
-  ⟨.nop, [], false⟩]
+  ⟨.nop, [], false⟩,
+  ⟨.nop, [2], false⟩]
 
 /-- main -/
 def f6 : CFG := [
@@ -67,7 +68,7 @@ def f6 : CFG := [
   ⟨.cmd (.base (.own (.c (.base (.alloc 1))))), [3], false⟩,
   ⟨.cmd (.base (.own (.c (.base (.move 1 2))))), [4], false⟩,
   ⟨.cmd (.base (.own (.c (.base (.use 2))))), [5], false⟩,
-  ⟨.nop, [6, 11], false⟩,
+  ⟨.nop, [6, 14], false⟩,
   ⟨.cmd (.base (.own (.c (.base (.free 2))))), [7], false⟩,
   ⟨.cmd (.base (.own (.c (.base (.alloc 3))))), [8], false⟩,
   ⟨.cmd (.base (.own (.c (.base (.use 3))))), [9], false⟩,
@@ -75,6 +76,7 @@ def f6 : CFG := [
   ⟨.nop, [13], false⟩,
   ⟨.cmd (.base (.own (.c (.base (.free 2))))), [12], false⟩,
   ⟨.nop, [13], false⟩,
-  ⟨.nop, [], false⟩]
+  ⟨.nop, [], false⟩,
+  ⟨.nop, [11], false⟩]
 
 #eval Core.C5.report [("begin", 5, f0), ("exec", 1, f1), ("commit", 1, f2), ("rollback", 1, f3), ("transfer", 3, f4), ("report", 1, f5), ("main", 4, f6)] true

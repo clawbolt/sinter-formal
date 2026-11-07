@@ -84,12 +84,14 @@ def f4 : CFG := [
   ⟨.cmd (.reg (.read 3)), [22], false⟩,
   ⟨.cmd (.reg (.read 3)), [23], false⟩,
   ⟨.leave, [24], false⟩,
-  ⟨.nop, [25, 26], false⟩,
+  ⟨.nop, [25, 28], false⟩,
   ⟨.nop, [27], false⟩,
   ⟨.nop, [27], false⟩,
-  ⟨.nop, [28, 29], false⟩,
-  ⟨.nop, [30], false⟩,
-  ⟨.nop, [30], false⟩,
-  ⟨.nop, [], false⟩]
+  ⟨.nop, [29, 32], false⟩,
+  ⟨.nop, [26], false⟩,
+  ⟨.nop, [31], false⟩,
+  ⟨.nop, [31], false⟩,
+  ⟨.nop, [], false⟩,
+  ⟨.nop, [30], false⟩]
 
 #eval Core.C5.report [("first", 1, f0), ("add", 2, f1), ("try_alloc", 1, f2), ("run", 4, f3), ("main", 6, f4)] true
