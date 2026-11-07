@@ -48,6 +48,7 @@ lake build
 | M8（一）枚举：构造、按移动的 `match`、按标签析构 | `Core/M8.lean` | 已通过机器检查（Lean v4.35.0） |
 | M8（二）按借用的 `match` 与源对象锁定 | `Core/M8b.lean` | 已通过机器检查（Lean v4.35.0） |
 | M9（一）泛型：定义处按抽象类型检查 | `Core/M9.lean` | 已通过机器检查（Lean v4.35.0）：定义处通过 ⇒ 每个满足约束的实例都通过，实例的安全与无泄漏由 M7（一）得到 |
+| M10（一）trait 约束与静态派发 | `Core/M10.lean` | 已通过机器检查（Lean v4.35.0）：定义处通过、实例对每个约束都有参数约定一致的 `impl` ⇒ 实例通过；例子说明缺 `impl`、`impl` 把 `let` 改成 `sink` 都会被拒绝 |
 
 M1 第一次编译时有 4 处 `omega` 失败（`omega` 不认 `abbrev Loc := Nat` 这个别名），改用 `Nat.lt_irrefl` 等引理后全部通过。后续里程碑避免在别名类型上用 `omega`。
 
