@@ -1,2 +1,4 @@
 .lake/
 npm-cache/
+# compiler/validate.sh 每次运行时重新生成
+Validate/
