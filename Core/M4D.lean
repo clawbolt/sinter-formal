@@ -24,10 +24,14 @@ import Core.M4
 
 证明的关键是调用的“框架引理” `execCallN_env`：只以 `read` 方式出现、或者根本没出现的变量，
 调用前后指针不变。被锁定的源对象正属于这一类，所以投影和源对象仍然指向同一个位置。
+
+**按 drop flag 析构** `dropIf x`（后来加入，对应编译器在“可能已移走”的变量上插入的
+`if (flag) drop(x)`）：静态上 `x` 无论处于哪种状态都变成 `no`，要求 `x` 没有被锁定；
+动态上就是 M2b 作用域结束时用的 `dropOne`，flag 为真才释放。这样之后可以给 `x` 重新赋值。
 -/
 
 namespace Core.M4D
-open Core.M2b (Own SEnv St allocOp freeOp dropAll dropAll_sound)
+open Core.M2b (Own SEnv St allocOp freeOp dropAll dropAll_sound dropOne dropOne_sound)
 open Core.M3 (Mode Arg eff recheck)
 open Core.M3n (checkCallN callN_sound afterAll afterAll_other capture effAll recheckAll
   execCallN)
@@ -35,8 +39,9 @@ open Core.M4 (Cmd Locks St4 check1 exec1 step1 Good good_empty locked active
   not_locked active_mem)
 
 inductive Cmd2
-  | c    (c : Cmd)
-  | call (args : List Arg) (prs : List Var)
+  | c      (c : Cmd)
+  | call   (args : List Arg) (prs : List Var)
+  | dropIf (x : Var)
 
 /-- 被锁定的源对象只能以 `read` 传入；传入的投影必须还活着。 -/
 def callOk (ps : Locks) (args : List Arg) (prs : List Var) : Bool :=
@@ -52,6 +57,7 @@ def check2 (N : Nat) (σ : SEnv) (ps : Locks) : Cmd2 → Option (SEnv × Locks)
       | some σ' => some (σ', ps)
       | none    => none
     else none
+  | .dropIf x => if locked ps x = false then some (upd σ x .no, ps) else none
 
 def checkL2 (N : Nat) (σ : SEnv) (ps : Locks) : List Cmd2 → Option (SEnv × Locks)
   | []      => some (σ, ps)
@@ -76,6 +82,10 @@ def exec2 (s : St4) : Cmd2 → Option St4
       | some b' => if prsLive ⟨b', s.pr⟩ prs = true then some ⟨b', s.pr⟩ else none
       | none    => none
     else none
+  | .dropIf x =>
+    match dropOne x s.b with
+    | some b' => some ⟨b', s.pr⟩
+    | none    => none
 
 def execL2 (s : St4) : List Cmd2 → Option St4
   | []      => some s
@@ -206,6 +216,17 @@ theorem prsLive_ok {N : Nat} {σ : SEnv} {ps : Locks} {s : St4} {prs : List Var}
   obtain ⟨l, hl, hlive⟩ := hg.dinv.owned_live z (hg.compat.yes z hz)
   simp [hpz, hl, hlive]
 
+/-- `dropOne` 不改指针（只改 `live` 和 drop flag）。 -/
+theorem dropOne_env {x : Var} {s s' : St} (h : dropOne x s = some s') : s'.env = s.env := by
+  unfold dropOne at h
+  split at h
+  · split at h
+    · split at h
+      · cases h; rfl
+      · contradiction
+    · contradiction
+  · cases h; rfl
+
 theorem step2 {N : Nat} {σ σ' : SEnv} {ps ps' : Locks} {s : St4} {c : Cmd2}
     (hc : check2 N σ ps c = some (σ', ps')) (hg : Good N σ ps s) :
     ∃ s', exec2 s c = some s' ∧ Good N σ' ps' s' := by
@@ -251,6 +272,36 @@ theorem step2 {N : Nat} {σ σ' : SEnv} {ps ps' : Locks} {s : St4} {c : Cmd2}
         refine ⟨⟨b', s.pr⟩, ?_, hg'⟩
         simp [exec2, prsLive_ok hg hprs, he, prsLive_ok hg' hprs]
       · contradiction
+    · contradiction
+  | dropIf x =>
+    simp only [check2] at hc
+    split at hc
+    · rename_i hnl
+      cases hc
+      obtain ⟨b', he, hd', hfx, hrest⟩ := dropOne_sound x hg.dinv
+      refine ⟨⟨b', s.pr⟩, by simp only [exec2, he], ⟨?_, hd', ?_⟩⟩
+      · constructor
+        · intro z hz
+          by_cases hzx : z = x
+          · rw [hzx] at hz
+            simp [upd] at hz
+          · rw [upd_other _ _ hzx] at hz
+            rw [hrest z hzx]
+            exact hg.compat.yes z hz
+        · intro z hz
+          by_cases hzx : z = x
+          · rw [hzx]
+            exact hfx
+          · rw [upd_other _ _ hzx] at hz
+            rw [hrest z hzx]
+            exact hg.compat.no z hz
+      · intro p z hm
+        obtain ⟨hz, hpz⟩ := hg.pinv p z hm
+        have hzx : z ≠ x := not_locked hnl hm
+        refine ⟨by rw [upd_other _ _ hzx]; exact hz, ?_⟩
+        show s.pr p = b'.env z
+        rw [dropOne_env he]
+        exact hpz
     · contradiction
 
 theorem listSound2 (N : Nat) (cs : List Cmd2) :
@@ -325,5 +376,13 @@ example : (checkL2 2 (fun _ => .no) [] bad2).isNone = true := rfl
 def bad3 : List Cmd2 :=
   [.c (.base (.alloc 0)), .c (.proj 5 0), .c (.endp 5), .call [] [5]]
 example : (checkL2 2 (fun _ => .no) [] bad3).isNone = true := rfl
+
+/-- 只在一个分支里移走之后，按 flag 析构，再重新赋值：接受（静态状态 `maybe` 由 `dropIf` 变成 `no`）。 -/
+def ok3 : List Cmd2 := [.dropIf 0, .c (.base (.alloc 0)), .dropIf 0, .c (.base (.alloc 0))]
+example : (checkL2 2 (fun _ => .maybe) [] ok3).isSome = true := rfl
+
+/-- 投影还在时按 flag 析构源对象：拒绝。 -/
+def bad4 : List Cmd2 := [.c (.base (.alloc 0)), .c (.proj 5 0), .dropIf 0]
+example : (checkL2 2 (fun _ => .no) [] bad4).isNone = true := rfl
 
 end Core.M4D

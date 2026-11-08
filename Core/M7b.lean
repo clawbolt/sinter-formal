@@ -175,6 +175,17 @@ theorem bounded_check2 {N : Nat} {σ σ' : SEnv} {ps ps' : Locks} {c : Cmd2}
         · contradiction
       · contradiction
     · contradiction
+  | dropIf x =>
+    simp only [check2] at hc
+    split at hc
+    · cases hc
+      intro z hz
+      by_cases hzx : z = x
+      · rw [hzx]
+        simp [upd]
+      · rw [upd_other _ _ hzx]
+        exact hb z hz
+    · contradiction
 
 structure Good (N : Nat) (s : SS) (st : St) : Prop where
   o : Core.M4.Good N s.σ s.ps st.o
