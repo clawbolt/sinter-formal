@@ -67,6 +67,7 @@ lake build
 | M22 闭包捕获引用 | `Core/M22.lean` | 已通过机器检查：捕获的区域在提升出的函数里是区域参数，调用时按 M14 实例化；`capture_below`：被捕获的变量在调用者的作用域里，由 M5 的不变式 `Good` 得到它指向的区域还活着；`capture_mono`：按嵌套顺序编号，实例化保持顺序；`capture_safe`：由 M14 的 `entry_safe` 得到执行不出错；反例：已结束的区域不满足 `Below` |
 | S4 标准库 `std.map` 的规格 | `Core/S4.lean` | 已通过机器检查：键严格递增的键值对列表；只依赖 `Ord` 的定律，插入、删除后仍有序（`ins_sorted`、`del_sorted`），插入后查得到（`lookup_ins`），删除后查不到（`lookup_del`），别的键不受影响（`lookup_ins_other`、`lookup_del_other`） |
 | S5 `std.map` 的二分查找 | `Core/S5.lean` | 已通过机器检查：键严格递增时，二分查找（`bs`，循环不变式：`lo` 之前都小于 `k`，`hi` 开始都不小于 `k`）和原来的线性查找（`lin`）都满足 `IsLower`（`bs_lower`、`lin_lower`），满足它的下标唯一（`lower_unique`），所以两者结果相同（`bs_eq_lin`），S4 的定律对新实现照样成立 |
+| S6 `std.treemap` 的 AVL 树 | `Core/S6.lean` | 已通过机器检查：旋转、`bal`、去掉最小键、`join` 都不改变中序遍历（`toList_bal` 等）；键有序时，查找、插入、删除的中序遍历分别等于 S4 的 `lookup`、`ins`、`del`（`lookupT_eq`、`insT_eq`、`delT_eq`），所以仍有序、查得到刚插入的、查不到刚删除的。平衡（树高是对数）没有证明，只由 C43 的测试检查 |
 
 M1 第一次编译时有 4 处 `omega` 失败（`omega` 不认 `abbrev Loc := Nat` 这个别名），改用 `Nat.lt_irrefl` 等引理后全部通过。后续里程碑避免在别名类型上用 `omega`。
 
