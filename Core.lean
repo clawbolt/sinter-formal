@@ -45,6 +45,7 @@ import Core.M18
 import Core.M19
 import Core.M20
 import Core.M21
+import Core.M22
 import Core.S1
 import Core.S2
 import Core.S3
