@@ -56,6 +56,8 @@ lake build
 | M15（一）含引用的数据类型 | `Core/M15.lean` | 已通过机器检查（Lean v4.35.0）：变量的值里有一组指针，静态信息记下值的类型里的区域（类型实参里的区域都算上）；`pack`、`empty`（`.None` 不含指针但类型带区域）、`read`；`safety_and_no_leak`：接受的程序执行不出错、结束时没有区域活着；反例说明漏掉类型实参的检查器会接受读取悬空指针的程序（`eraseP bad1`）；泛型函数换名对一组区域的情形没有重新证明 |
 | M16（一）含引用的数据类型的协变 | `Core/M16.lean` | 已通过机器检查（Lean v4.35.0）：变量的类型固定，每个引用的位置一个区域；值的每个槽为空或指向一个不比类型里对应区域短命的区域；`copy` 逐个位置协变；`safety_and_no_leak`：接受的程序执行不出错、结束时没有区域活着；反方向复制被拒绝且不经检查执行出错；协变只对只读的值成立 |
 | M17 字符串 `Str` | `Core/M17.lean` | 已通过机器检查（Lean v4.35.0）：`Str` 是没有子格子的格子；字面量、拼接、复制都是 `alloc`，追加只换地址；`str_scope_end` 由 M12 的 `scope_end` 得到 |
+| S1 标准库 `std.math` 的规格 | `Core/S1.lean` | 已通过机器检查（Lean v4.35.0）：`Ord` 的四条定律；I64、Str（按字节字典序）的 `cmp` 满足；`min_of`、`max_of` 只依赖定律；`clamp`、`pow`、`sign` 的规格 |
+| S2 标准库 `std.str`、`std.vec` 的规格 | `Core/S2.lean` | 已通过机器检查：`starts_with`、`find`（第一次出现 / 确实没有）、`trim`（只去头尾空白）、`join(split(s, sep), sep) == s`、`reverse` |
 
 M1 第一次编译时有 4 处 `omega` 失败（`omega` 不认 `abbrev Loc := Nat` 这个别名），改用 `Nat.lt_irrefl` 等引理后全部通过。后续里程碑避免在别名类型上用 `omega`。
 
