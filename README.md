@@ -57,6 +57,7 @@ lake build
 | M16（一）含引用的数据类型的协变 | `Core/M16.lean` | 已通过机器检查（Lean v4.35.0）：变量的类型固定，每个引用的位置一个区域；值的每个槽为空或指向一个不比类型里对应区域短命的区域；`copy` 逐个位置协变；`safety_and_no_leak`：接受的程序执行不出错、结束时没有区域活着；反方向复制被拒绝且不经检查执行出错；协变只对只读的值成立 |
 | M17 字符串 `Str` | `Core/M17.lean` | 已通过机器检查（Lean v4.35.0）：`Str` 是没有子格子的格子；字面量、拼接、复制都是 `alloc`，追加只换地址；`str_scope_end` 由 M12 的 `scope_end` 得到 |
 | M18 `for x in inout v` | `Core/M18.lean` | 已通过机器检查：循环体不提到 `v` 时下标都在界内、长度不变（`for_inout_ok`），反例 `bad_pop`；元素整体赋值由 M12 的操作组成（`replace_reach`），旧值析构后不泄漏（`replace_scope_end`） |
+| M19 `panic` | `Core/M19.lean` | 已通过机器检查：CFG 加 `halt` 节点，编码成指向自己的空节点；`sim`：走到 `halt` 之前两种语义相同；`panic_safe`：编码后被 `cfgOk` 接受则执行不出错、正常或出错离开时干净 |
 | S1 标准库 `std.math` 的规格 | `Core/S1.lean` | 已通过机器检查（Lean v4.35.0）：`Ord` 的四条定律；I64、Str（按字节字典序）的 `cmp` 满足；`min_of`、`max_of` 只依赖定律；`clamp`、`pow`、`sign` 的规格 |
 | S2 标准库 `std.str`、`std.vec` 的规格 | `Core/S2.lean` | 已通过机器检查：`starts_with`、`find`（第一次出现 / 确实没有）、`trim`（只去头尾空白）、`join(split(s, sep), sep) == s`、`reverse` |
 | S3 文件与参数 IO 的规格 | `Core/S3.lean` | 已通过机器检查：写后读、写一个路径不影响别的、读不存在的是 `Err`、两次写以后一次为准；`write_atomic`：失败时文件系统不变 |
