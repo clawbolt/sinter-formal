@@ -44,7 +44,7 @@ lake build
 | M7（七·上）降级正确：模拟关系 | `Core/M7j.lean` | 已通过机器检查（Lean v4.35.0） |
 | M7（七·下）降级正确：`lower` 满足嵌入关系 | `Core/M7k.lean` | 已通过机器检查（Lean v4.35.0） |
 | C5 翻译验证：复核编译器导出的 CFG | `Core/C5.lean`（`compiler/validate.sh` 生成 `Validate/*.lean`） | 已通过：17 个可编译程序全部接受（含字符串的 c29_str、for 循环的 c30_for、break 的 c31_break、读取输入的 c32_input）（含部分移动的 c14_partial、分支里移走后放回的 c15_refill、多层部分移动的 c18_nested），12 个跳过编译器检查的反例全部被独立拒绝 |
-| C5 后半：22400 个程序的三方对照 | `Core/C5b.lean`（打印成 Sinter 源码），`compiler/diff.sh` | 已通过：Lean 接受的 2173 个 sinterc 全部接受；sinterc 另外接受 985 个（自动析构，允许）；sinterc 接受的 3158 个各按 15 组选择运行，泄漏 0 次 |
+| C5 后半：42000 个程序的三方对照 | `Core/C5b.lean`（打印成 Sinter 源码），`Core/C5c.lean`（第三组：整体移动、调用约定、闭包、泛型），`compiler/diff.sh` | 已通过：第三组 19600 个程序在 Lean 里结构化和 CFG 结论相同（都接受 4301）；Lean 接受的 6474 个（2173 + 4301）sinterc 全部接受；sinterc 另外接受 2224 个（自动析构，允许）；sinterc 接受的 8698 个各按 15 组选择运行，泄漏 0 次。闭包按 M21 的模型当作一次调用（只读捕获按 read、被写按 inout） |
 | M8（一）枚举：构造、按移动的 `match`、按标签析构 | `Core/M8.lean` | 已通过机器检查（Lean v4.35.0） |
 | M8（二）按借用的 `match` 与源对象锁定 | `Core/M8b.lean` | 已通过机器检查（Lean v4.35.0） |
 | M9（一）泛型：定义处按抽象类型检查 | `Core/M9.lean` | 已通过机器检查（Lean v4.35.0）：定义处通过 ⇒ 每个满足约束的实例都通过，实例的安全与无泄漏由 M7（一）得到 |
