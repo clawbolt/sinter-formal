@@ -66,6 +66,7 @@ lake build
 | M21 闭包 | `Core/M21.lean` | 已通过机器检查：闭包只能当实参传。（一）排他性：捕获当作调用处的额外实参按 M3n 的规则检查；`inner_ok`：被调函数用自己的实参调用闭包或往下传时仍满足同一条规则（`two_levels`：两层）；例子说明 `for_each(v, |x| v.push(x))` 被拒绝。（二）不会悬空：每个帧里的闭包只引用更靠下的帧（`good_reach`）；调用闭包时它的帧还在（`clo_live`）；帧返回后没有引用它的闭包（`pop_clean`）；反例：允许返回闭包时不成立 |
 | M22 闭包捕获引用 | `Core/M22.lean` | 已通过机器检查：捕获的区域在提升出的函数里是区域参数，调用时按 M14 实例化；`capture_below`：被捕获的变量在调用者的作用域里，由 M5 的不变式 `Good` 得到它指向的区域还活着；`capture_mono`：按嵌套顺序编号，实例化保持顺序；`capture_safe`：由 M14 的 `entry_safe` 得到执行不出错；反例：已结束的区域不满足 `Below` |
 | S4 标准库 `std.map` 的规格 | `Core/S4.lean` | 已通过机器检查：键严格递增的键值对列表；只依赖 `Ord` 的定律，插入、删除后仍有序（`ins_sorted`、`del_sorted`），插入后查得到（`lookup_ins`），删除后查不到（`lookup_del`），别的键不受影响（`lookup_ins_other`、`lookup_del_other`） |
+| S5 `std.map` 的二分查找 | `Core/S5.lean` | 已通过机器检查：键严格递增时，二分查找（`bs`，循环不变式：`lo` 之前都小于 `k`，`hi` 开始都不小于 `k`）和原来的线性查找（`lin`）都满足 `IsLower`（`bs_lower`、`lin_lower`），满足它的下标唯一（`lower_unique`），所以两者结果相同（`bs_eq_lin`），S4 的定律对新实现照样成立 |
 
 M1 第一次编译时有 4 处 `omega` 失败（`omega` 不认 `abbrev Loc := Nat` 这个别名），改用 `Nat.lt_irrefl` 等引理后全部通过。后续里程碑避免在别名类型上用 `omega`。
 
