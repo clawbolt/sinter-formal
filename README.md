@@ -58,6 +58,8 @@ lake build
 | M17 字符串 `Str` | `Core/M17.lean` | 已通过机器检查（Lean v4.35.0）：`Str` 是没有子格子的格子；字面量、拼接、复制都是 `alloc`，追加只换地址；`str_scope_end` 由 M12 的 `scope_end` 得到 |
 | S1 标准库 `std.math` 的规格 | `Core/S1.lean` | 已通过机器检查（Lean v4.35.0）：`Ord` 的四条定律；I64、Str（按字节字典序）的 `cmp` 满足；`min_of`、`max_of` 只依赖定律；`clamp`、`pow`、`sign` 的规格 |
 | S2 标准库 `std.str`、`std.vec` 的规格 | `Core/S2.lean` | 已通过机器检查：`starts_with`、`find`（第一次出现 / 确实没有）、`trim`（只去头尾空白）、`join(split(s, sep), sep) == s`、`reverse` |
+| S3 文件与参数 IO 的规格 | `Core/S3.lean` | 已通过机器检查：写后读、写一个路径不影响别的、读不存在的是 `Err`、两次写以后一次为准；`write_atomic`：失败时文件系统不变 |
+| M9u `()` 作类型实参 | `Core/M9u.lean` | 已通过机器检查：`()` 是 `copy`；换进任何类型参数都满足约束（`unit_respects`）；实例安全、不泄漏（`unit_instance_safe`，由 M9 的 `instance_safe` 得到） |
 
 M1 第一次编译时有 4 处 `omega` 失败（`omega` 不认 `abbrev Loc := Nat` 这个别名），改用 `Nat.lt_irrefl` 等引理后全部通过。后续里程碑避免在别名类型上用 `omega`。
 
