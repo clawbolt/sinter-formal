@@ -62,6 +62,8 @@ lake build
 | S2 标准库 `std.str`、`std.vec` 的规格 | `Core/S2.lean` | 已通过机器检查：`starts_with`、`find`（第一次出现 / 确实没有）、`trim`（只去头尾空白）、`join(split(s, sep), sep) == s`、`reverse` |
 | S3 文件与参数 IO 的规格 | `Core/S3.lean` | 已通过机器检查：写后读、写一个路径不影响别的、读不存在的是 `Err`、两次写以后一次为准；`write_atomic`：失败时文件系统不变 |
 | M9u `()` 作类型实参 | `Core/M9u.lean` | 已通过机器检查：`()` 是 `copy`；换进任何类型参数都满足约束（`unit_respects`）；实例安全、不泄漏（`unit_instance_safe`，由 M9 的 `instance_safe` 得到） |
+| M20 `vec_swap` | `Core/M20.lean` | 已通过机器检查：把数组格子的子格子换成一个排列，M12 的不变式保持（`permute_inv`）；交换两个位置是排列（`swap_perm`）；交换后作用域结束时全部析构、不泄漏（`swap_scope_end`） |
+| S4 标准库 `std.map` 的规格 | `Core/S4.lean` | 已通过机器检查：键严格递增的键值对列表；只依赖 `Ord` 的定律，插入、删除后仍有序（`ins_sorted`、`del_sorted`），插入后查得到（`lookup_ins`），删除后查不到（`lookup_del`），别的键不受影响（`lookup_ins_other`、`lookup_del_other`） |
 
 M1 第一次编译时有 4 处 `omega` 失败（`omega` 不认 `abbrev Loc := Nat` 这个别名），改用 `Nat.lt_irrefl` 等引理后全部通过。后续里程碑避免在别名类型上用 `omega`。
 
