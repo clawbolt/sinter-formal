@@ -75,6 +75,7 @@ lake build
 | S7 UTF-8 | `Core/S7.lean` | 已通过机器检查：合法字符编码后 `decode1` 正好解出它（`dec_encode`）；一串合法字符编码再按字符遍历得到原来的字符（`chars_encodeAll`），`str_push_char` 之后正好多出这个字符（`push_chars`）；解码得到的总是合法字符，不合法的字节解成 U+FFFD（`decode1_valid`）。sinterc 的 `sn_utf8_put`、`sn_utf8_get` 与 `encode`、`decode1` 逐条对应 |
 | S8 堆排序 | `Core/S8.lean` | 已通过机器检查：`siftDown`、`heapify`、`extract` 与 `std/vec.sn` 的 `sift`、`sort_by` 逐条对应；结果排好序（`heapSort_sorted`），并且由若干次 `[0, n)` 里的交换得到、是原来元素的一个排列（`heapSort_swaps`）。不变式：下沉时除了当前位置都满足堆性质；取出时前面是堆、后面已排好、前面的都不大于后面的 |
 | S9 哈希表 | `Core/S9.lean` | 已通过机器检查：槽位表看成位置到键的函数，不变式是每个键在起始位置之后、中间没有空位、键不重复。查找结果和表的内容一致（`lookup_iff`）；插入保持不变式、别的键位置不变（`ins_spec`）；删除后移回填保持不变式、表里的键恰好少了被删的那个（`erase_spec`，回填过程的不变式 `SInv`：只有当前空位可能挡在后面键的探测路上）。紧凑数组那一侧由 `test/c51.t` 与 `std.map` 的随机对照检查 |
+| S10 大整数 | `Core/S10.lean` | 已通过机器检查：各位从低到高、基数 10^9。逐位加法（`val_addL`）、带借位的减法（被减数不小于减数时，`val_subL`）、乘一位和从高位开始的乘法（`val_mul1`、`val_mulL`）、从高位往低位的比较（`cmpL_spec`）、除以不超过基数的数（`val_divS`）、去掉高位的 0（`val_trim`）算出的数都对，结果每一位仍小于基数（`digits_*`）。带符号的一层：`toInt (addZ x y) = toInt x + toInt y`，减法、乘法、取负同样（`toInt_subZ`、`toInt_mulZ`、`toInt_negZ`），0 只有一种写法（`norm`）。和 `std/bigint.sn` 一一对应，I64 的范围由 `test/c54.t` 的随机对照检查 |
 
 M1 第一次编译时有 4 处 `omega` 失败（`omega` 不认 `abbrev Loc := Nat` 这个别名），改用 `Nat.lt_irrefl` 等引理后全部通过。后续里程碑避免在别名类型上用 `omega`。
 
