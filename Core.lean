@@ -60,3 +60,4 @@ import Core.S9
 import Core.S10
 import Core.M24
 import Core.M24b
+import Core.M25
