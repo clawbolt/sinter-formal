@@ -88,3 +88,12 @@ M1 第一次编译时有 4 处 `omega` 失败（`omega` 不认 `abbrev Loc := Na
 
 - 泄漏：覆盖一个仍然拥有值的变量会泄漏，检查器拒绝这种情况，但还没有证明“程序结束时没有泄漏”。放到 M2，和作用域结束时的自动释放一起证明。
 - 控制流、参数约定、投影、区域、`linear`：见报告附录 E 的里程碑表。
+
+
+## 许可证 / License
+
+MIT 或 Apache-2.0，任选其一（[LICENSE-MIT](LICENSE-MIT)、[LICENSE-APACHE](LICENSE-APACHE)）。
+除非另有说明，你提交的贡献按同样的双许可发布。
+
+Licensed under either of MIT or Apache-2.0 at your option. Unless you state otherwise, any contribution you
+submit is dual licensed in the same way.
