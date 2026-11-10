@@ -69,6 +69,7 @@ lake build
 | M23 `match` 的通配分支 `_` | `Core/M23.lean` | 已通过机器检查：覆盖检查 `covers`（`_` 最多一个、在最后、还有没写到的变体；没有 `_` 时写全）通过时，把 `_` 展开成每个变体一个分支（带载荷时先析构载荷）一定成功（`expand_some`、`expand_length`）；展开后每个分支的检查结果就是编译器检查的结果（`wild_arm`、`expand_arm`），所以 M8 的 `safety_and_no_leak` 照样成立（`wild_safe`）。字面量分支只是 if 链，不需要新的推理 |
 | S5 `std.map` 的二分查找 | `Core/S5.lean` | 已通过机器检查：键严格递增时，二分查找（`bs`，循环不变式：`lo` 之前都小于 `k`，`hi` 开始都不小于 `k`）和原来的线性查找（`lin`）都满足 `IsLower`（`bs_lower`、`lin_lower`），满足它的下标唯一（`lower_unique`），所以两者结果相同（`bs_eq_lin`），S4 的定律对新实现照样成立 |
 | S6 `std.treemap` 的 AVL 树 | `Core/S6.lean` | 已通过机器检查：旋转、`bal`、去掉最小键、`join` 都不改变中序遍历（`toList_bal` 等）；键有序时，查找、插入、删除的中序遍历分别等于 S4 的 `lookup`、`ins`、`del`（`lookupT_eq`、`insT_eq`、`delT_eq`），所以仍有序、查得到刚插入的、查不到刚删除的。平衡（树高是对数）没有证明，只由 C43 的测试检查 |
+| S7 UTF-8 | `Core/S7.lean` | 已通过机器检查：合法字符编码后 `decode1` 正好解出它（`dec_encode`）；一串合法字符编码再按字符遍历得到原来的字符（`chars_encodeAll`），`str_push_char` 之后正好多出这个字符（`push_chars`）；解码得到的总是合法字符，不合法的字节解成 U+FFFD（`decode1_valid`）。sinterc 的 `sn_utf8_put`、`sn_utf8_get` 与 `encode`、`decode1` 逐条对应 |
 
 M1 第一次编译时有 4 处 `omega` 失败（`omega` 不认 `abbrev Loc := Nat` 这个别名），改用 `Nat.lt_irrefl` 等引理后全部通过。后续里程碑避免在别名类型上用 `omega`。
 
