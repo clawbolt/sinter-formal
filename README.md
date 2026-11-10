@@ -79,6 +79,7 @@ lake build
 | M24b 嵌套模式的覆盖检查 | `Core/M24b.lean` | 已通过机器检查：按类型（整数、k 个变体的枚举、二元组）枚举有限个代表值，“写出的字面量各一个、再加一个‘其他’”，深度取模式的最大深度。每个值都被某个代表值概括（`abs_match`、`abs_mem`）：代表值都有分支匹配时，这个类型的每个值都有分支匹配（`exhaustive_sound`）；某个分支对所有代表值都不是第一个匹配的分支时，它对任何值都不是（`useful_complete`），所以报告的“永远匹配不到”是对的 |
 | M25 泛型 impl 的查找 | `Core/M25.lean` | 已通过机器检查：类型是一阶的项，查找 `t: tr` 先看泛型函数的约束，否则找头部能匹配 `t` 的 impl、再递归查它的约束。impl 的头部不是单独的类型参数、约束只写在头部出现的类型参数上（`WF`），同一个 trait 的两个 impl 头部不相容（`Coherent`）时：查找成功当且仅当有推导（`solve_sound`、`solve_complete`，约束里的类型都是真子项，所以查找会停），适用的 impl 至多一个（`impl_unique`），泛型函数定义处查得到的约束，类型参数换成满足约束的具体类型以后也查得到（`instance_resolves`）——单态化不会因为找不到 impl 而失败，M10 在泛型 impl 下照样成立。默认方法是约束 `Self: trait` 的泛型函数，直接用 M10 |
 | S10 大整数 | `Core/S10.lean` | 已通过机器检查：各位从低到高、基数 10^9。逐位加法（`val_addL`）、带借位的减法（被减数不小于减数时，`val_subL`）、乘一位和从高位开始的乘法（`val_mul1`、`val_mulL`）、从高位往低位的比较（`cmpL_spec`）、除以不超过基数的数（`val_divS`）、去掉高位的 0（`val_trim`）算出的数都对，结果每一位仍小于基数（`digits_*`）。带符号的一层：`toInt (addZ x y) = toInt x + toInt y`，减法、乘法、取负同样（`toInt_subZ`、`toInt_mulZ`、`toInt_negZ`），0 只有一种写法（`norm`）。和 `std/bigint.sn` 一一对应，I64 的范围由 `test/c54.t` 的随机对照检查 |
+| S11 UTF-8 的合法性检查 | `Core/S11.lean` | 已通过机器检查：`str_from_utf8` 的检查和 S7 共用 `decode1`，每一轮解出的字符编码回去要正好是吃掉的字节（`valid`）。检查通过当且仅当字节串是某串合法字符的编码（`valid_sound`、`valid_complete`、`utf8_iff`），通过时按字符遍历再编码回去不变（`chars_of_utf8`）。例子：单独的 0xFF、截断、过长的编码、代理区都不合法，写出来的 U+FFFD 合法 |
 
 M1 第一次编译时有 4 处 `omega` 失败（`omega` 不认 `abbrev Loc := Nat` 这个别名），改用 `Nat.lt_irrefl` 等引理后全部通过。后续里程碑避免在别名类型上用 `omega`。
 
