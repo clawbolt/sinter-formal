@@ -55,3 +55,4 @@ import Core.S4
 import Core.S5
 import Core.S6
 import Core.S7
+import Core.S8
