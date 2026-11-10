@@ -1,5 +1,8 @@
 # 核心演算的 Lean 4 证明
 
+编译器在单独的仓库 [sinterc](https://github.com/clawbolt/sinterc)；把两个仓库克隆到同一个目录下（`compiler`、`lean`），
+编译器的 `validate.sh`、`diff.sh` 会用到这里的证明。
+
 只依赖 Lean 核心库，不需要 Mathlib。
 
 ## 运行
