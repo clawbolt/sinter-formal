@@ -127,6 +127,7 @@ lake build
 |---|---|
 | `Static.lean` | trait 约束与静态派发：定义处通过、实例对每个约束都有参数约定一致的 `impl` ⇒ 实例通过；缺 `impl`、`impl` 把 `let` 改成 `sink` 都会被拒绝 |
 | `ImplSearch.lean` | 泛型 impl 的查找：`WF`、`Coherent` 下查找成功当且仅当有推导（`solve_sound`、`solve_complete`，查找会停），适用的 impl 至多一个（`impl_unique`），定义处查得到的约束在实例里也查得到（`instance_resolves`）——单态化不会因为找不到 impl 而失败。默认方法是约束 `Self: trait` 的泛型函数，直接用 `Static.lean` |
+| `Inherent.lean` | 类型自己的方法（`impl 类型 { }`）：按接收者类型查找，先查方法、再查约束里的 trait、否则报错，不落到全局函数。`CoherentM` 下能匹配的方法一定被查到、和书写顺序无关（`resolve_complete`）；落到 trait 时实例里 impl 查得到（`resolve_tra_instance`）；查到方法时换掉类型参数仍是同一个函数（`resolve_stable`）。反例：头部重叠时按顺序查到不同的函数；落到 trait 的调用在实例里重新查会变，所以只在定义处查一次 |
 
 ### 闭包 `Core/Closures/`
 

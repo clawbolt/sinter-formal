@@ -62,6 +62,7 @@ import Core.Library.BigInt
 import Core.Matching.Nested
 import Core.Matching.Coverage
 import Core.Traits.ImplSearch
+import Core.Traits.Inherent
 import Core.Closures.Stored
 import Core.Strings.Slice
 import Core.Strings.ChunkLines
