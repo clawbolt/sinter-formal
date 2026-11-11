@@ -14,8 +14,7 @@ import Core.S4
   （删除有两个子树的节点时，用右子树的最小键顶替：`toList_popMin`、`toList_join`）；
 - 所以 S4 的定律对树照样成立（`insT_sorted`、`delT_sorted`、`lookupT_ins`、`lookupT_del`）。
 
-**还没证明的**：AVL 的高度保持在 O(log n)（两边子树高度差不超过 1）。现在只证明了正确性；
-平衡性由 `std/treemap.sn` 的测试检查（例子里依次插入 1…7 后高度是 3）。
+这里只证明正确性；AVL 的平衡（两边子树高度差不超过 1，所以树高是 O(log n)）在 S6b 里证明。
 -/
 
 namespace Core.S6
