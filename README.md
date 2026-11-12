@@ -45,6 +45,7 @@ lake build
 | `Liveness.lean` | 活跃性：投影的锁定只持续到最后一次使用 |
 | `Branches.lean` | 投影与分支、循环 |
 | `CallArg.lean` | 投影作为调用参数；按 drop flag 析构 `dropIf`（静态变成“没有”，要求没被锁定；动态是 `Ownership.Branch` 的 `dropOne`），`step2` 和 `Unified.Call` 的 `bounded_check2` 覆盖这个情况 |
+| `Return.lean` | 返回借用的调用（`fn get(v: Vec<T>, i: I64) -> &T in v`）：调用之后返回的借用锁住以 `read` 传入的参数，和投影一样（`callOwn` 就是调用接着投影）；也可以借用传入的投影（`callBor`，锁住同一个源对象，比传入的投影活得长）；反例：不检查时借用还在就释放源对象，读到已释放的内存 |
 | `Dataflow.lean` | 分支、循环上的活跃性分析 |
 
 ### 区域 `Core/Regions/`
