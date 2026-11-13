@@ -139,6 +139,12 @@ lake build
 | `CapRef.lean` | 闭包捕获引用：捕获的区域在提升出的函数里是区域参数，调用时按 `Regions.Generic` 实例化；`capture_below`、`capture_mono`、`capture_safe`；反例：已结束的区域不满足 `Below` |
 | `Stored.lean` | 可以存起来的闭包 `Fn(T) -> U` 和 trait 对象 `dyn Tr`。不会悬空：`pack` 的值环境按值拥有，不变式照旧（`good_reach`、`clo_live`、`pop_clean`、`pack_clean`）；排他性：闭包体从实参访问的位置和环境里的位置不重叠（`env_disjoint`），`fs[0](fs)` 被拒绝；动态派发：对象安全的方法签名和里面的类型无关（`sig_indep`），查得到 impl（`vtable_found`），经过方法表的调用等于直接调用（`dispatch_eq`） |
 
+### 并发 `Core/Concurrency/`
+
+| 文件 | 内容 |
+|---|---|
+| `Scope.lean` | 结构化并发 `scope` / `spawn`：父任务和已经 spawn 的任务按任意调度交错执行（覆盖任意线程数、任意抢占）。任务只能只读共享（`let`）或移动（`sink`）捕获；这条规则（`check`）保证足迹互不冲突（`check_indep`）。足迹不冲突、每个线程单独执行不出错时：任何调度下下一步都不出错（`safe`），没结束时总能走一步（`progress`），结束时的内存和调度无关（`deterministic`），等于在每个 `spawn` 处把任务整个执行完的顺序程序（`scope_eq_seq`），合起来是 `checked_scope`。反例：任务读、父任务同时写同一个变量时两种调度结果不同（`race`），`check` 拒绝它 |
+
 ### 字符串 `Core/Strings/`
 
 | 文件 | 内容 |

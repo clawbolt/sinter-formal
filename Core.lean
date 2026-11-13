@@ -69,3 +69,4 @@ import Core.Strings.Slice
 import Core.Strings.ChunkLines
 import Core.Library.Utf8Check
 import Core.Projection.Return
+import Core.Concurrency.Scope
