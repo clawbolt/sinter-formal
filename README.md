@@ -57,8 +57,9 @@ lake build
 | `NoDrop.lean` | D4：区域里不放带 `Drop` / `linear` 的值 |
 | `Params.lean` | D3：函数的区域参数之间没有顺序 |
 | `Generic.lean` | 区域参数与泛型实例化：函数体在定义处把区域参数当作抽象深度检查；调用处的实际区域保持声明的 outlives 顺序（`Mono`）且都活着（`Below`）时，按区域换名得到的实例在调用处检查通过（`instance_accepted`），并由 `Regions.Model` 的 `sound` 得到执行不出错（`instance_safe`、`entry_safe`）；反向实例化被拒绝 |
-| `Data.lean` | 含引用的数据类型：静态信息记下值的类型里的区域（类型实参里的区域都算上）；`pack`、`empty`（`.None` 不含指针但类型带区域）、`read`；`safety_and_no_leak`；反例：漏掉类型实参的检查器会接受读取悬空指针的程序（`eraseP bad1`）。泛型函数换名对一组区域的情形没有重新证明 |
+| `Data.lean` | 含引用的数据类型：静态信息记下值的类型里的区域（类型实参里的区域都算上）；`pack`、`empty`（`.None` 不含指针但类型带区域）、`read`；`safety_and_no_leak`；反例：漏掉类型实参的检查器会接受读取悬空指针的程序（`eraseP bad1`）。泛型函数换名对一组区域的情形见 `DataGeneric.lean` |
 | `DataVariance.lean` | 含引用的数据类型的协变：值的每个槽为空或指向一个不比类型里对应区域短命的区域；`copy` 逐个位置协变；`safety_and_no_leak`；反方向复制被拒绝且不经检查执行出错；协变只对只读的值成立 |
+| `DataGeneric.lean` | 含引用的数据类型与区域参数的实例化（补上 `Data.lean` 没做的部分）：值里存着借用的类型（迭代器 `MapIter<&Map<K, V> in m>`）可以出现在带区域参数的函数签名里；定义处把区域参数当作抽象深度检查通过、调用处的实际区域保持 outlives 顺序且都活着时，按区域换名的实例在调用处检查通过（`instance_accepted`），执行不出错（`instance_safe`、`entry_safe`）。模拟关系把 `Regions.Generic` 的“至多一个区域”换成区域列表；例子：迭代器的 `next` 接受，把本地块的引用装进结果被拒绝 |
 
 ### 线性值 `Core/Linearity/`
 

@@ -41,6 +41,7 @@ import Core.Ownership.Partial
 import Core.Regions.Generic
 import Core.Regions.Data
 import Core.Regions.DataVariance
+import Core.Regions.DataGeneric
 import Core.Datatypes.Str
 import Core.Datatypes.VecInout
 import Core.FlowGraph.Panic

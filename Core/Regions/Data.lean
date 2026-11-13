@@ -23,7 +23,7 @@ import Core.Regions.Model
 即编译器早先 `region_names` 的行为），检查器会接受一个读取悬空指针的程序（`bad1`）。
 这正是在有这条规则之前，编译器必须拒绝含引用的泛型数据类型的原因。
 
-泛型函数实例化时的区域换名（`Regions.Generic`）对每个引用分别成立；这里没有把 `Regions.Generic` 的模拟重新对一组区域做一遍。
+泛型函数实例化时的区域换名对一组区域的情形见 `Regions.DataGeneric`。
 -/
 
 namespace Core.Regions.Data
